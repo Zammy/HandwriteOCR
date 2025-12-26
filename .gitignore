@@ -1,0 +1,7 @@
+env/
+.DS_Store
+papers/
+temp/
+__pycache__/
+_inter_data/**/*
+.vscode/
