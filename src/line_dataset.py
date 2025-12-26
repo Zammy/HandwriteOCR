@@ -5,6 +5,8 @@ import torch
 from torch.utils.data import Dataset
 from typing import Tuple
 
+from src.data_augmentation import elastic_distortion, random_rotation
+
 
 class LineImageTextDataset(Dataset):
     def __init__(
@@ -17,7 +19,7 @@ class LineImageTextDataset(Dataset):
         self.images_dir = Path(images_dir)
         self.transform = transform
         self.data_pairs = []
-        
+
         self._discover_and_load_pairs()
 
     def _discover_and_load_pairs(self):
@@ -67,18 +69,25 @@ class LineImageTextDataset(Dataset):
         if image is None:
             raise ValueError(f"Failed to load image: {image_path}")
 
-        image = image.astype(np.float32) / 255.0
-
         if self.transform:
             image = self.transform(image)
-        else:
-            image = torch.from_numpy(image).unsqueeze(0)
+
+        image = image.astype(np.float32) / 255.0
+        image = torch.from_numpy(image).unsqueeze(0)
 
         return image, text
 
 
+def online_augment(image):
+    if np.random.rand() > 0.5:
+        image = random_rotation(image, max_angle=3.5)
+    if np.random.rand() > 0.5:
+        image = elastic_distortion(image, alpha=3, sigma=5)
+    return image
+
+
 def test_dataset(num_samples: int = 5):
-    dataset = LineImageTextDataset()
+    dataset = LineImageTextDataset(transform=online_augment)
 
     print(f"\nTesting dataset with {num_samples} samples:\n")
 
