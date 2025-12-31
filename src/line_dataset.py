@@ -48,7 +48,7 @@ class LineImageTextDataset(Dataset):
                 lines = f.read().splitlines()
 
             for line_idx, text in enumerate(lines):
-                image_path = image_folder / f"line_{line_idx}.png"
+                image_path = image_folder / f"line_{line_idx+1}.png"
 
                 if not image_path.exists():
                     print(f"Warning: Image not found: {image_path}")

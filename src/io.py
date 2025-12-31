@@ -80,7 +80,7 @@ def save_line_images(
     saved_files = []
 
     for i, img in enumerate(line_images):
-        filename = f"line_{i}{ext}"
+        filename = f"line_{i+1}{ext}"
         filepath = os.path.join(output_dir, filename)
 
         cv2.imwrite(filepath, img)
