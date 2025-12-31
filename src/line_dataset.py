@@ -5,7 +5,7 @@ import torch
 from torch.utils.data import Dataset
 from typing import Tuple
 
-from src.data_augmentation import elastic_distortion, random_rotation
+from src.data_augmentation import AugmentationConfig, get_augmentor
 
 
 class LineImageTextDataset(Dataset):
@@ -78,33 +78,33 @@ class LineImageTextDataset(Dataset):
         return image, text
 
 
-def online_augment(image):
-    if np.random.rand() > 0.5:
-        image = random_rotation(image, max_angle=3.5)
-    if np.random.rand() > 0.5:
-        image = elastic_distortion(image, alpha=3, sigma=5)
-    return image
+def debug_augmentation_run(num_samples: int = 50):
+    import time
 
+    output_dir = Path("debug_outputs")
+    output_dir.mkdir(exist_ok=True)
 
-def test_dataset(num_samples: int = 5):
-    dataset = LineImageTextDataset(transform=online_augment)
+    aug_cfg = AugmentationConfig()
+    dataset = LineImageTextDataset(
+        transform=get_augmentor(aug_cfg),
+    )
 
-    print(f"\nTesting dataset with {num_samples} samples:\n")
+    print(f"Starting debug run. Saving {num_samples} images to {output_dir}/")
 
-    rng = np.random.default_rng()
-    for _ in range(min(num_samples, len(dataset))):
-        idx = int(rng.integers(0, len(dataset)))
-        image, text = dataset[idx]
+    for i in range(num_samples):
+        idx = np.random.randint(0, len(dataset))
+        img, text = dataset[idx]
 
-        img_display = image.numpy().squeeze()
+        timestamp = str(int(time.time() * 1000))[-4:]
+        filename = f"idx{idx}_{np.random.randint(1024)}_{timestamp}.png"
+
+        img_display = img.numpy().squeeze()
         img_display = (img_display * 255).astype(np.uint8)
 
-        cv2.imshow(f"Sample {idx}: {text}", img_display)
-        print("  Press any key to continue...\n")
-        cv2.waitKey(0)
+        cv2.imwrite(str(output_dir / filename), img_display)
 
-    cv2.destroyAllWindows()
+    print(f"Done! Inspect files in {output_dir}")
 
 
 if __name__ == "__main__":
-    test_dataset()
+    debug_augmentation_run()
