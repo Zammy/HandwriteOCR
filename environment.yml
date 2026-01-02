@@ -1,0 +1,12 @@
+name: HandwriteOCR
+channels:
+  - conda-forge
+dependencies:
+  - matplotlib
+  - opencv
+  - python=3.11
+  - pytorch
+  - scikit-learn
+  - torchvision
+  - pip:
+    - opencv-stubs==0.1.1
