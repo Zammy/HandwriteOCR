@@ -48,6 +48,7 @@ class LineImageTextDataset(Dataset):
                 lines = f.read().splitlines()
 
             for line_idx, text in enumerate(lines):
+                text = LineImageTextDataset.clean_text(text)
                 image_path = image_folder / f"line_{line_idx+1}.png"
 
                 if not image_path.exists():
@@ -57,6 +58,14 @@ class LineImageTextDataset(Dataset):
                 self.data_pairs.append((str(image_path), text))
 
         print(f"Loaded {len(self.data_pairs)} image-text pairs")
+    
+    @staticmethod
+    def clean_text(text):
+        # Replace non-breaking hyphen with standard hyphen
+        text = text.replace('\u2011', '-') 
+        # Optional: Replace other common "fancy" dashes
+        text = text.replace('\u2013', '-').replace('\u2014', '-') 
+        return text
 
     def __len__(self) -> int:
         return len(self.data_pairs)
