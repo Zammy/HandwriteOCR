@@ -19,7 +19,7 @@ from torch.utils.data import DataLoader
 from typing import Tuple, List
 import time
 
-from src.vocab_ctc import CTCDecoder, Vocabulary, calculate_cer, calculate_wer
+from .vocab_ctc import CTCDecoder, Vocabulary, calculate_cer, calculate_wer
 
 
 class OCRTrainer:
@@ -361,8 +361,8 @@ def test_ocr_trainer():
     print("=" * 70)
     
     # Create dummy model and vocab
-    from src.crnn_model import CRNN
-    from src.vocab_ctc import Vocabulary
+    from .crnn_model import CRNN
+    from .vocab_ctc import Vocabulary
     
     vocab = Vocabulary()
     model = CRNN(num_classes=vocab.num_classes)

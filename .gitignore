@@ -5,5 +5,5 @@ temp/
 __pycache__/
 _inter_data/**/*
 .vscode/
-runs/**/*
 data/MNIST/**/*
+_experiments/**/*

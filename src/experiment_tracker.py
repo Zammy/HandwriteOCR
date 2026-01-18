@@ -10,20 +10,26 @@ from pathlib import Path
 class ExperimentTracker:
     """Simple experiment tracking system for ML experiments"""
 
-    def __init__(self, base_dir: str = "runs") -> None:
+    def __init__(
+        self, base_dir: str = "_experiments", run_dir: str = "run", unique_folder=True
+    ) -> None:
         self.base_dir: Path = Path(base_dir)
-        self.run_dir: Path | None
+        self.run_dir: Path = Path(run_dir)
         self.metrics: dict[str, list[float]] = {
             "train_loss": [],
             "train_acc": [],
             "val_loss": [],
             "val_acc": [],
         }
+        self.unique_folder = unique_folder
 
     def create_run(self, config: dict) -> None:
         """Create a new run directory with timestamp"""
-        timestamp: str = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        self.run_dir = self.base_dir / f"run_{timestamp}"
+        if self.unique_folder:
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+            self.run_dir = self.base_dir / f"{self.run_dir}_{timestamp}"
+        else:
+            self.run_dir = self.base_dir / f"{self.run_dir}"
         self.run_dir.mkdir(parents=True, exist_ok=True)
         (self.run_dir / "plots").mkdir(exist_ok=True)
 
@@ -51,11 +57,6 @@ class ExperimentTracker:
             f"Train Loss={train_loss:.4f}, Train Acc={train_acc:.2f}%, "
             f"Val Loss={val_loss:.4f}, Val Acc={val_acc:.2f}%"
         )
-
-    def save_metrics(self) -> None:
-        """Save metrics to JSON"""
-        with open(self.run_dir / "metrics.json", "w") as f:
-            json.dump(self.metrics, f, indent=2)
 
     def save_model(self, model: nn.Module, filename: str = "model.pt") -> None:
         """Save model parameters for inference"""
@@ -175,3 +176,11 @@ class ExperimentTracker:
         self.plot_loss_curves()
         self.plot_accuracy_curves()
         self.plot_cer_curve()
+
+    def save_results(self, results: dict) -> None:
+        """Save arbitrary results dictionary (final metrics, etc.) to JSON
+
+        The file is saved as `results.json` in the run directory.
+        """
+        with open(self.run_dir / "results.json", "w") as f:
+            json.dump(results, f, indent=2)

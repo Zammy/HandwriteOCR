@@ -2,13 +2,13 @@ import cv2
 import numpy as np
 from sklearn.cluster import DBSCAN, KMeans
 
-from src.debug import (
+from .debug import (
     save_connected_components_by_label_temp,
     save_line_boxes_overlays_temp,
     save_line_images_temp,
     visualize_connected_components_temp,
 )
-from src.io import save_image_temp
+from .io import save_image_temp
 
 
 def dilate_for_clustering(binary, kernel_size=(3, 3), iterations=1):

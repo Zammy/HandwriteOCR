@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import os
 
-from src.io import save_image_temp
+from .io import save_image_temp
 
 
 def draw_contours(image, contours):

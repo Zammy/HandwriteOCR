@@ -2,14 +2,14 @@ import os
 from pathlib import Path
 import cv2
 
-from src.io import (
+from .io import (
     delete_all_files,
     load_images_from_folder,
     load_text_file,
     save_line_images,
 )
-from src.line_extraction import segment_handwritten_lines
-from src.preprocess_deterministic import (
+from .line_extraction import segment_handwritten_lines
+from .preprocess_deterministic import (
     binarize_document,
     convert_to_grayscale,
     preprocess_pipeline,

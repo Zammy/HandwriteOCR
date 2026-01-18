@@ -5,7 +5,7 @@ import torch
 from torch.utils.data import Dataset
 from typing import Tuple
 
-from src.data_augmentation import AugmentationConfig, get_augmentor
+from .data_augmentation import AugmentationConfig, get_augmentor
 
 
 class LineImageTextDataset(Dataset):

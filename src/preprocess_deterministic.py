@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from typing import Callable, List, Tuple
 
-from src.io import save_image_temp
+from .io import save_image_temp
 
 
 def resize_with_aspect_ratio(image, height=1024, interpolation=cv2.INTER_AREA):
